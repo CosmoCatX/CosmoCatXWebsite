@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$CATX | The First Feline on Mars</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --bg-dark: #05050a;
+            --space-blue: #0b0c10;
+            --neon-green: #39ff14;
+            --neon-cyan: #00f3ff;
+            --text-light: #e0e2e4;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0a0a2a 50%, #1a0b2e 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .brand {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Starry Background Effect */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background: 
+                radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 50px 160px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 130px 80px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 160px 120px, #ffffff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: twinkle 5s infinite linear;
+            z-index: -1;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(5, 5, 10, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .brand {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-green);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--neon-green);
+            border: 2px solid var(--neon-green);
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--neon-green);
+            color: var(--bg-dark);
+            box-shadow: 0 0 25px var(--neon-green);
+            transform: scale(1.05);
+        }
+
+        .btn-cyan {
+            color: var(--neon-cyan);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .btn-cyan:hover {
+            background: var(--neon-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 0 25px var(--neon-cyan);
+        }
+
+        /* Floating Animation for Cats */
+        .float {
+            animation: floating 4s ease-in-out infinite;
+        }
+        
+        .float-delayed {
+            animation: floating 5s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 5vw;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .text-content h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-content h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--neon-cyan);
+        }
+
+        .text-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #a0a5aa;
+        }
+
+        .image-content img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 20px;
+        }
+
+        .reverse {
+            direction: rtl;
+        }
+        .reverse > * {
+            direction: ltr;
+        }
+
+        /* Community / Gallery Section */
+        .community {
+            flex-direction: column;
+            text-align: center;
+            min-height: auto;
+            padding-bottom: 50px;
+        }
+        
+        .gallery {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .gallery img {
+            width: 300px;
+            border-radius: 20px;
+            transition: transform 0.3s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.1) rotate(-3deg);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            background: #05050a;
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .text-content h1 { font-size: 3rem; }
+            .text-content h2 { font-size: 2rem; }
+            .nav-links { display: none; } /* Simplified mobile nav for now */
+            nav { justify-content: center; }
+            .reverse { direction: ltr; }
+        }
+
+        /* Tokenomics Dashboard UI */
+        .tk-dashboard {
+            width: 100%;
+            max-width: 1200px;
+            margin: 40px auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tk-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .tk-card, .tk-fee-box {
+            background: #121318;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .tk-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tk-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: #7a7e85;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tk-live-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #4ade80;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #4ade80;
+        }
+
+        .tk-live-text {
+            color: #4ade80;
+        }
+
+        .tk-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .tk-fee-text {
+            font-size: 0.95rem;
+            color: #a0a5aa;
+            margin-bottom: 20px;
+        }
+
+        .tk-bar-container {
+            display: flex;
+            width: 100%;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .tk-bar-1 { background-color: #ff6b4a; width: 45%; }
+        .tk-bar-2 { background-color: #4ade80; width: 25%; }
+        .tk-bar-3 { background-color: #facc15; width: 15%; }
+        .tk-bar-4 { background-color: #374151; width: 15%; }
+        
+        .tk-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            font-size: 0.85rem;
+            color: #a0a5aa;
+        }
+
+        .tk-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tk-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Make dashboard responsive on smaller screens */
+        @media (max-width: 900px) {
+            .tk-cards { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .tk-cards { grid-template-columns: 1fr; }
+            .tk-legend { flex-direction: column; gap: 12px; }
+        }
+
+        /* Rewards Section & Panel */
+        #rewards {
+            padding: 100px 5vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .rw-wrap {
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .rw-wrap h2 {
+            font-size: 2.2rem;
+            margin: 10px 0 15px;
+            color: #ffffff;
+        }
+
+        .rewards-panel {
+            background: #111216;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 35px;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .rw-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .rw-eyebrow {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: #7a7e85;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .mono {
+            font-family: monospace;
+        }
+
+        .btn-coral {
+            background-color: transparent;
+            color: var(--neon-cyan);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 30px;
+            padding: 12px 28px;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .btn-coral:hover:not(:disabled) {
+            background-color: var(--neon-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 0 25px var(--neon-cyan);
+            transform: translateY(-1px);
+        }
+
+        .btn-coral:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background-color: transparent;
+            color: var(--neon-cyan);
+            box-shadow: none;
+        }
+
+        .rw-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .rw-stat {
+            background: #16171d;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .rw-stat .label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: #7a7e85;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .rw-stat .value {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .rw-stat .value.accent {
+            color: var(--neon-green);
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+        }
+
+        .rw-claim-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.05rem;
+            border-radius: 30px;
+            margin-top: 10px;
+        }
+
+        .rw-note {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #a0a5aa;
+            margin: 12px 0;
+        }
+
+        .rw-note a {
+            color: var(--neon-cyan);
+        }
+
+        .rw-note-warn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(57, 255, 20, 0.05);
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            color: var(--neon-green);
+        }
+
+        .rw-status {
+            margin-top: 14px;
+            font-size: 0.9rem;
+            text-align: center;
+            color: var(--neon-cyan);
+            min-height: 1.2rem;
+        }
+
+        .rw-fine {
+            font-size: 0.85rem;
+            color: #666a73;
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .rw-fine a {
+            color: #90949d;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 650px) {
+            .rw-stats {
+                grid-template-columns: 1fr;
+            }
+            .rw-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
+        /* Contract Card UI */
+        .contract-card {
+            background: #121318;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .ca-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #05050a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 12px 0 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ca-row .mono {
+            font-family: monospace;
+            color: var(--neon-cyan);
+            font-size: 0.95rem;
+            word-break: break-all;
+            margin-right: 15px;
+        }
+
+        .copy-btn {
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--neon-cyan);
+            color: var(--bg-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+
+    <nav>
+        <a href="#" class="brand">$CATX</a>
+        <div class="nav-links">
+            <a href="#about">Mission</a>
+            <a href="#tokenomics">Tokenomics</a>
+            <a href="#buy">How to Buy</a>
+            <a href="#rewards">Rewards</a>
+        </div>
+        <a href="#buy" class="btn btn-cyan">Buy Now</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="container">
+            <div class="text-content">
+                <h1>Board the Starship</h1>
+                <p>Welcome to Cosmo Cat ($CATX) - the first feline-themed cryptocurrency which rewards holders in SpaceX stocks ($SPCX)! 
+                <p>Forget the moon - we’re going interplanetary! Join the fearless Cosmo Cat on an epic mission beyond the stars.</p>
+                <a href="#about" class="btn">Explore the Mission</a>
+                <a href="#buy" class="btn btn-cyan" style="margin-left: 15px;">Ape In</a>
+            </div>
+            <div class="image-content">
+                <img src="image1.png" alt="Cat riding a rocket" class="float">
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container reverse">
+            <div class="text-content">
+                <h2>SpaceX Approved*</h2>
+                <p>Cosmo Cat ($CATX) is the first Sentry token which rewards holders with Spacex SPCX stock rewards. Earn while you sleep with timeless reflections, zero-gravity fees, and 100% pure rocket fuel. 
+                <p>🚀🐱 Hold $CATX, earn $SPCX, and fuel the mission to Mars.</p>
+                <p style="font-size: 0.8rem; color: #555;">*Not actually approved by SpaceX, but we manifest it.</p>
+            </div>
+            <div class="image-content">
+                <img src="image2.png" alt="Cat outside SpaceX HQ" class="float-delayed">
+            </div>
+        </div>
+    </section>
+
+    <!-- Tokenomics Section -->
+    <section id="tokenomics" style="display: block; padding-top: 100px; padding-bottom: 100px;">
+        <div class="container" style="align-items: center; margin-bottom: 40px;">
+            <div class="text-content">
+                <h2>Tokenomics</h2>
+                <p>Built for a sustainable orbit.</p>
+                <a href="#" class="btn btn-cyan">View Chart</a>
+            </div>
+            <div class="image-content" style="text-align: right;">
+                <img src="image3.png" alt="Elon is Buying Cat" class="float" style="max-width: 350px; margin-left: auto;">
+            </div>
+        </div>
+
+        <!-- Dashboard UI -->
+        <div class="tk-dashboard" style="padding: 0 5vw;">
+            <div class="tk-cards">
+                <div class="tk-card">
+                    <div class="tk-label">TOTAL SUPPLY</div>
+                    <div class="tk-value">1,000,000,000</div>
+                </div>
+                <div class="tk-card">
+                    <div class="tk-label">CHAIN</div>
+                    <div class="tk-value">Ink</div>
+                </div>
+                <div class="tk-card">
+                    <div class="tk-label">HOLDERS <span class="tk-live-dot"></span> <span class="tk-live-text">LIVE</span></div>
+                    <div class="tk-value">0</div>
+                </div>
+                <div class="tk-card">
+                    <div class="tk-label">TOTAL FEE</div>
+                    <div class="tk-value">2%</div>
+                </div>
+            </div>
+
+            <div class="tk-fee-box">
+                <div class="tk-fee-text">Every trade carries a 2% fee, split four ways:</div>
+                <div class="tk-bar-container">
+                    <div class="tk-bar-1"></div>
+                    <div class="tk-bar-2"></div>
+                    <div class="tk-bar-3"></div>
+                    <div class="tk-bar-4"></div>
+                </div>
+                <div class="tk-legend">
+                    <div class="tk-legend-item"><div class="tk-dot" style="background-color: #ff6b4a;"></div> Treasury — 0.90%</div>
+                    <div class="tk-legend-item"><div class="tk-dot" style="background-color: #4ade80;"></div> Holders — 0.50%</div>
+                    <div class="tk-legend-item"><div class="tk-dot" style="background-color: #facc15;"></div> Quotrons dividends (terminals) — 0.30%</div>
+                    <div class="tk-legend-item"><div class="tk-dot" style="background-color: #374151;"></div> Quotrons xStocks LP compound — 0.30%</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Buy Section -->
+    <section id="buy">
+        <div class="container reverse">
+            <div class="text-content">
+                <h2>How to Buy</h2>
+                <p>Still stuck on Earth while the chads are headed to Mars? Follow these simple steps to secure your payload:</p>
+                <ol style="color: #a0a5aa; font-size: 1.1rem; margin-left: 20px; margin-bottom: 30px;">
+                    <li style="margin-bottom: 10px;">Create a crypto wallet (Rabby, MetaMask, etc.)</li>
+                    <li style="margin-bottom: 10px;">Fund it with ETH to cover gas.</li>
+                    <li style="margin-bottom: 10px;">Connect to Sentry, our DEX partner.</li>
+                    <li style="margin-bottom: 10px;">Swap for $CATX and secure your helmet!</li>
+                </ol>
+            <!-- Contract Box -->
+                <div class="contract-card">
+                    <span class="rw-eyebrow" style="color: var(--neon-cyan);">Contract Address</span>
+                    <div class="ca-row">
+                        <span class="mono" id="caText">0x06A0Ff27F4f2363259FC4c96DdE427E06048EdD3</span>
+                        <button class="copy-btn" id="copyCard" onclick="navigator.clipboard.writeText('0x06A0Ff27F4f2363259FC4c96DdE427E06048EdD3'); this.innerText='Copied!'; setTimeout(() => this.innerText='Copy', 2000);">Copy</button>
+                    </div>
+                    <a href="https://www.sentry.trading/tokens?chain=ink&token=0x06A0Ff27F4f2363259FC4c96DdE427E06048EdD3" target="_blank" rel="noopener" class="btn btn-cyan" style="width: 100%; text-align: center; padding: 12px 0; display: block; box-sizing: border-box;">Buy on Sentry →</a>
+                    <p class="rw-fine" style="margin-bottom: 0;">Confirm this address on the <a href="https://explorer.inkonchain.com/token/0x06A0Ff27F4f2363259FC4c96DdE427E06048EdD3" target="_blank" rel="noopener">explorer →</a></p>
+                </div>
+            </div>
+            <div class="image-content">
+                <img src="image4.png" alt="Chad Buy $CATX" class="float-delayed">
+            </div>
+        </div>
+    </section>
+
+    <!-- Rewards Section -->
+    <section id="rewards">
+        <div class="rw-wrap">
+            <div class="section-head">
+                <span class="rw-eyebrow" style="color: var(--neon-cyan);">REWARDS</span>
+                <h2>Every trade prints. This is where you cash in.</h2>
+                <p style="color: #a0a5aa;">A share of every trade goes to $CATX holders automatically as $SPCX — no staking, no claiming windows. Connect your wallet to see what you've earned.</p>
+            </div>
+
+            <div class="rewards-panel">
+                <div class="rw-top">
+                    <div>
+                        <span class="rw-eyebrow">Wallet</span>
+                        <p id="rw-address" class="mono" style="margin-top: 4px; font-size: 1.05rem;">Not connected</p>
+                    </div>
+                    <button class="btn-coral" id="rw-connect" type="button">Connect Wallet</button>
+                </div>
+
+                <p id="rw-nowallet" hidden class="rw-note">No wallet extension detected. Install <a href="https://metamask.io" target="_blank" rel="noopener">MetaMask</a> or another Ink-compatible wallet, then reload this page.</p>
+                <p id="rw-load-error" hidden class="rw-note">Wallet tools failed to load — refresh the page and try again.</p>
+
+                <div id="rw-network-warn" hidden class="rw-note rw-note-warn">
+                    <span>You're connected to a different network.</span>
+                    <button class="btn-coral" id="rw-switch" type="button" style="padding: 6px 14px; font-size: 0.8rem;">Switch to Ink</button>
+                </div>
+
+                <!-- Rewards stats panel -->
+                <div id="rw-panel">
+                    <div class="rw-stats">
+                        <div class="rw-stat">
+                            <div class="label">Your $CATX balance</div>
+                            <div class="value" id="rw-catx-balance">0 $CATX</div>
+                        </div>
+                        <div class="rw-stat">
+                            <div class="label">Claimable $SPCX</div>
+                            <div class="value accent" id="rw-claimable">0.00</div>
+                        </div>
+                        <div class="rw-stat">
+                            <div class="label">Lifetime earned</div>
+                            <div class="value" id="rw-lifetime">0.00 SPCX</div>
+                        </div>
+                        <div class="rw-stat">
+                            <div class="label">Already claimed</div>
+                            <div class="value" id="rw-claimed">0.00 SPCX</div>
+                        </div>
+                    </div>
+
+                    <button class="btn-coral rw-claim-btn" id="rw-claim" type="button" disabled>Claim $SPCX →</button>
+                    <p id="rw-status" class="rw-status" role="status"></p>
+                </div>
+
+                <p class="rw-fine">Rewards contract: <a href="https://explorer.inkonchain.com/address/0x68fa48B1C2FE52b3D776E1953e0E782b5044Ce28" target="_blank" rel="noopener" class="mono">0x68fa...Ce28</a> · Reward token: <a href="https://explorer.inkonchain.com/token/0x68fa48B1C2FE52b3D776E1953e0E782b5044Ce28" target="_blank" rel="noopener" class="mono">SPCX</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section id="community" class="community">
+        <h2>Join the $CATX Fleet</h2>
+        <p>Say GM to the best community in the cosmos.</p>
+        
+        <div class="gallery">
+            <img src="image5.png" alt="GM Space Cat">
+            <img src="image6.png" alt="Cat thumbs up on the moon">
+        </div>
+
+        <div style="margin-top: 50px;">
+            <a href="https://x.com/TheCosmoCatX" target="_blank" rel="noopener noreferrer" class="btn">Twitter / X</a>
+            <a href="#" class="btn btn-cyan" style="margin-left: 15px;">Telegram</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <h2 style="color: var(--neon-cyan); margin-bottom: 10px;">$CATX</h2>
+        <p>$CATX is a meme coin with no intrinsic value or expectation of financial return. There is no formal team or roadmap. The coin is completely useless and for entertainment purposes only.</p>
+        <p style="margin-top: 20px;">&copy; 2026 $CATX Token. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
