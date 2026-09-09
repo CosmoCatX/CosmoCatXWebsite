@@ -809,9 +809,9 @@
             const response = await fetch(`https://explorer.inkonchain.com/api/v2/tokens/${CATX_ADDRESS}`);
             if (response.ok) {
                 const data = await response.json();
-                const holders = data.holder_count || data.holders;
-                if (holders !== undefined) {
-                    document.getElementById('tk-holders').innerText = parseInt(holders).toLocaleString();
+                // Match the exact API key used in the working Apple Inu reference
+                if (data && data.holders_count != null) {
+                    document.getElementById('tk-holders').innerText = parseInt(data.holders_count).toLocaleString();
                 }
             }
         } catch (error) {
@@ -820,21 +820,12 @@
     }
     fetchLiveHolders(); // Run it immediately on page load
     
-    // We added decimals() and rewardToken() to the ABI just like Apple Inu
     const CATX_ABI = [
         "function balanceOf(address owner) view returns (uint256)",
         "function withdrawableDividendOf(address owner) view returns (uint256)",
         "function accumulativeDividendOf(address owner) view returns (uint256)",
         "function withdrawnDividends(address owner) view returns (uint256)",
-        "function rewardToken() view returns (address)",
-        "function decimals() view returns (uint8)",
         "function claim() external"
-    ];
-
-    // ABI to check the $SPCX reward token specifically
-    const ERC20_ABI = [
-        "function decimals() view returns (uint8)",
-        "function symbol() view returns (string)"
     ];
 
     const connectBtn = document.getElementById('rw-connect');
@@ -850,6 +841,7 @@
     let provider, signer, userAddress;
 
     async function checkNetwork() {
+        // Bypass window.ethereum and ask ethers.js directly for the decimal chainId
         const network = await provider.getNetwork();
         const onInk = network.chainId === 57073;
         networkWarn.hidden = onInk;
@@ -876,68 +868,48 @@
             if (isInk) {
                 const catxContract = new ethers.Contract(CATX_ADDRESS, CATX_ABI, provider);
                 
-                try {
-                    // Fetch balances AND the exact CATX decimals simultaneously
-                    const [catxBal, claimable, lifetime, claimed, catxDecimals] = await Promise.all([
-                        catxContract.balanceOf(userAddress),
-                        catxContract.withdrawableDividendOf(userAddress),
-                        catxContract.accumulativeDividendOf(userAddress),
-                        catxContract.withdrawnDividends(userAddress),
-                        catxContract.decimals()
-                    ]);
+                const [catxBal, claimable, lifetime, claimed] = await Promise.all([
+                    catxContract.balanceOf(userAddress),
+                    catxContract.withdrawableDividendOf(userAddress),
+                    catxContract.accumulativeDividendOf(userAddress),
+                    catxContract.withdrawnDividends(userAddress)
+                ]);
 
-                    // Fetch the reward token decimals dynamically so we don't guess
-                    let spcxDecimals = 18;
-                    let spcxSymbol = "SPCX";
-                    try {
-                        const rewardAddr = await catxContract.rewardToken();
-                        const rewardContract = new ethers.Contract(rewardAddr, ERC20_ABI, provider);
-                        spcxDecimals = await rewardContract.decimals();
-                        spcxSymbol = await rewardContract.symbol();
-                    } catch (e) {
-                        console.warn("Could not fetch reward token details, defaulting to 18");
-                    }
-
-                    // Format using the CORRECT dynamic decimals
-                    document.getElementById('rw-catx-balance').innerText = 
-                        Number(ethers.utils.formatUnits(catxBal, catxDecimals)).toLocaleString(undefined, {maximumFractionDigits: 2}) + ' $CATX';
+                document.getElementById('rw-catx-balance').innerText = 
+                    parseFloat(ethers.utils.formatUnits(catxBal, 18)).toLocaleString(undefined, {maximumFractionDigits: 2}) + ' $CATX';
+                
+                document.getElementById('rw-claimable').innerText = 
+                    parseFloat(ethers.utils.formatUnits(claimable, 18)).toLocaleString(undefined, {maximumFractionDigits: 4});
                     
-                    document.getElementById('rw-claimable').innerText = 
-                        Number(ethers.utils.formatUnits(claimable, spcxDecimals)).toLocaleString(undefined, {maximumFractionDigits: 4});
-                        
-                    document.getElementById('rw-lifetime').innerText = 
-                        Number(ethers.utils.formatUnits(lifetime, spcxDecimals)).toLocaleString(undefined, {maximumFractionDigits: 4}) + ` ${spcxSymbol}`;
-                        
-                    document.getElementById('rw-claimed').innerText = 
-                        Number(ethers.utils.formatUnits(claimed, spcxDecimals)).toLocaleString(undefined, {maximumFractionDigits: 4}) + ` ${spcxSymbol}`;
+                document.getElementById('rw-lifetime').innerText = 
+                    parseFloat(ethers.utils.formatUnits(lifetime, 18)).toLocaleString(undefined, {maximumFractionDigits: 4}) + ' SPCX';
+                    
+                document.getElementById('rw-claimed').innerText = 
+                    parseFloat(ethers.utils.formatUnits(claimed, 18)).toLocaleString(undefined, {maximumFractionDigits: 4}) + ' SPCX';
 
-                    if (claimable.gt(0)) {
-                        claimBtn.disabled = false;
-                        claimBtn.onclick = async () => {
-                            try {
-                                claimBtn.disabled = true;
-                                statusText.innerText = "Confirming transaction in wallet...";
-                                const signerContract = catxContract.connect(signer);
-                                const tx = await signerContract.claim();
-                                
-                                statusText.innerText = "Transaction submitted. Waiting for confirmation...";
-                                await tx.wait();
-                                
-                                statusText.innerText = "Claim successful! Refreshing balances...";
-                                setTimeout(connectWallet, 2500);
-                            } catch (error) {
-                                console.error("Claim failed:", error);
-                                statusText.innerText = "Claim cancelled or failed.";
-                                claimBtn.disabled = false;
-                            }
-                        };
-                    } else {
-                        claimBtn.disabled = true;
-                        statusText.innerText = "No $SPCX available to claim yet.";
-                    }
-                } catch (balanceError) {
-                    console.error("Failed to read balances from contract:", balanceError);
-                    statusText.innerText = "Could not read balances. Try refreshing.";
+                if (claimable.gt(0)) {
+                    claimBtn.disabled = false;
+                    claimBtn.onclick = async () => {
+                        try {
+                            claimBtn.disabled = true;
+                            statusText.innerText = "Confirming transaction in wallet...";
+                            const signerContract = catxContract.connect(signer);
+                            const tx = await signerContract.claim();
+                            
+                            statusText.innerText = "Transaction submitted. Waiting for confirmation...";
+                            await tx.wait();
+                            
+                            statusText.innerText = "Claim successful! Refreshing balances...";
+                            setTimeout(connectWallet, 2500);
+                        } catch (error) {
+                            console.error("Claim failed:", error);
+                            statusText.innerText = "Claim cancelled or failed.";
+                            claimBtn.disabled = false;
+                        }
+                    };
+                } else {
+                    claimBtn.disabled = true;
+                    statusText.innerText = "No $SPCX available to claim yet.";
                 }
             }
         } catch (error) {
