@@ -809,8 +809,9 @@
             const response = await fetch(`https://explorer.inkonchain.com/api/v2/tokens/${CATX_ADDRESS}`);
             if (response.ok) {
                 const data = await response.json();
-                if (data && data.holders) {
-                    document.getElementById('tk-holders').innerText = parseInt(data.holders).toLocaleString();
+                // Blockscout uses 'holder_count'
+                if (data && data.holder_count !== undefined) {
+                    document.getElementById('tk-holders').innerText = parseInt(data.holder_count).toLocaleString();
                 }
             }
         } catch (error) {
@@ -839,7 +840,9 @@
 
     async function checkNetwork() {
         const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-        if (chainId !== INK_CHAIN_ID) {
+        
+        // Using Number() safely converts both '0xdef1' and '0xDEF1' to 57073
+        if (Number(chainId) !== 57073) {
             networkWarn.hidden = false;
             return false;
         }
