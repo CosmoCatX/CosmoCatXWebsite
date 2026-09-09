@@ -809,7 +809,6 @@
             const response = await fetch(`https://explorer.inkonchain.com/api/v2/tokens/${CATX_ADDRESS}`);
             if (response.ok) {
                 const data = await response.json();
-                // Match the exact API key used in the working Apple Inu reference
                 if (data && data.holders_count != null) {
                     document.getElementById('tk-holders').innerText = parseInt(data.holders_count).toLocaleString();
                 }
@@ -820,12 +819,20 @@
     }
     fetchLiveHolders(); // Run it immediately on page load
     
+    // ABI includes standard balance reading + dynamic decimal checking
     const CATX_ABI = [
         "function balanceOf(address owner) view returns (uint256)",
         "function withdrawableDividendOf(address owner) view returns (uint256)",
         "function accumulativeDividendOf(address owner) view returns (uint256)",
         "function withdrawnDividends(address owner) view returns (uint256)",
+        "function rewardToken() view returns (address)",
+        "function decimals() view returns (uint8)",
         "function claim() external"
+    ];
+
+    const ERC20_ABI = [
+        "function decimals() view returns (uint8)",
+        "function symbol() view returns (string)"
     ];
 
     const connectBtn = document.getElementById('rw-connect');
@@ -841,11 +848,21 @@
     let provider, signer, userAddress;
 
     async function checkNetwork() {
+        if (!provider) return false;
         // Bypass window.ethereum and ask ethers.js directly for the decimal chainId
         const network = await provider.getNetwork();
         const onInk = network.chainId === 57073;
         networkWarn.hidden = onInk;
         return onInk;
+    }
+
+    // A clean formatting function that catches math errors instead of crashing
+    function fmt(bn, decimals, maxFractions) {
+        try {
+            return Number(ethers.utils.formatUnits(bn, decimals)).toLocaleString(undefined, { maximumFractionDigits: maxFractions });
+        } catch (e) {
+            return '0';
+        }
     }
 
     async function connectWallet() {
@@ -854,10 +871,12 @@
             return;
         }
         try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            
+            // Assign directly to global variables (No 'const' keywords!)
             provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-            const accounts = await provider.send('eth_requestAccounts', []);
-            userAddress = accounts[0];
             signer = provider.getSigner();
+            userAddress = await signer.getAddress();
             
             addressDisplay.innerText = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
             connectBtn.hidden = true;
@@ -868,48 +887,61 @@
             if (isInk) {
                 const catxContract = new ethers.Contract(CATX_ADDRESS, CATX_ABI, provider);
                 
-                const [catxBal, claimable, lifetime, claimed] = await Promise.all([
-                    catxContract.balanceOf(userAddress),
-                    catxContract.withdrawableDividendOf(userAddress),
-                    catxContract.accumulativeDividendOf(userAddress),
-                    catxContract.withdrawnDividends(userAddress)
-                ]);
+                try {
+                    // Fetch balances AND the exact CATX decimals simultaneously
+                    const [catxBal, catxDecimals, claimable, lifetime, claimed] = await Promise.all([
+                        catxContract.balanceOf(userAddress),
+                        catxContract.decimals(),
+                        catxContract.withdrawableDividendOf(userAddress),
+                        catxContract.accumulativeDividendOf(userAddress),
+                        catxContract.withdrawnDividends(userAddress)
+                    ]);
 
-                document.getElementById('rw-catx-balance').innerText = 
-                    parseFloat(ethers.utils.formatUnits(catxBal, 18)).toLocaleString(undefined, {maximumFractionDigits: 2}) + ' $CATX';
-                
-                document.getElementById('rw-claimable').innerText = 
-                    parseFloat(ethers.utils.formatUnits(claimable, 18)).toLocaleString(undefined, {maximumFractionDigits: 4});
-                    
-                document.getElementById('rw-lifetime').innerText = 
-                    parseFloat(ethers.utils.formatUnits(lifetime, 18)).toLocaleString(undefined, {maximumFractionDigits: 4}) + ' SPCX';
-                    
-                document.getElementById('rw-claimed').innerText = 
-                    parseFloat(ethers.utils.formatUnits(claimed, 18)).toLocaleString(undefined, {maximumFractionDigits: 4}) + ' SPCX';
+                    // Fetch the reward token decimals dynamically
+                    let spcxDecimals = 18;
+                    let spcxSymbol = "SPCX";
+                    try {
+                        const rewardAddr = await catxContract.rewardToken();
+                        const rewardContract = new ethers.Contract(rewardAddr, ERC20_ABI, provider);
+                        spcxDecimals = await rewardContract.decimals();
+                        spcxSymbol = await rewardContract.symbol();
+                    } catch (e) {
+                        console.warn("Using default reward token decimals.");
+                    }
 
-                if (claimable.gt(0)) {
-                    claimBtn.disabled = false;
-                    claimBtn.onclick = async () => {
-                        try {
-                            claimBtn.disabled = true;
-                            statusText.innerText = "Confirming transaction in wallet...";
-                            const signerContract = catxContract.connect(signer);
-                            const tx = await signerContract.claim();
-                            
-                            statusText.innerText = "Transaction submitted. Waiting for confirmation...";
-                            await tx.wait();
-                            
-                            statusText.innerText = "Claim successful! Refreshing balances...";
-                            setTimeout(connectWallet, 2500);
-                        } catch (error) {
-                            console.error("Claim failed:", error);
-                            statusText.innerText = "Claim cancelled or failed.";
-                            claimBtn.disabled = false;
-                        }
-                    };
-                } else {
-                    claimBtn.disabled = true;
-                    statusText.innerText = "No $SPCX available to claim yet.";
+                    // Format using the explicit decimals pulled directly from the blockchain
+                    document.getElementById('rw-catx-balance').innerText = fmt(catxBal, catxDecimals, 2) + ' $CATX';
+                    document.getElementById('rw-claimable').innerText = fmt(claimable, spcxDecimals, 4);
+                    document.getElementById('rw-lifetime').innerText = fmt(lifetime, spcxDecimals, 4) + ' ' + spcxSymbol;
+                    document.getElementById('rw-claimed').innerText = fmt(claimed, spcxDecimals, 4) + ' ' + spcxSymbol;
+
+                    if (claimable.gt(0)) {
+                        claimBtn.disabled = false;
+                        claimBtn.onclick = async () => {
+                            try {
+                                claimBtn.disabled = true;
+                                statusText.innerText = "Confirming transaction in wallet...";
+                                const signerContract = catxContract.connect(signer);
+                                const tx = await signerContract.claim();
+                                
+                                statusText.innerText = "Transaction submitted. Waiting for confirmation...";
+                                await tx.wait();
+                                
+                                statusText.innerText = "Claim successful! Refreshing balances...";
+                                setTimeout(connectWallet, 2500);
+                            } catch (error) {
+                                console.error("Claim failed:", error);
+                                statusText.innerText = "Claim cancelled or failed.";
+                                claimBtn.disabled = false;
+                            }
+                        };
+                    } else {
+                        claimBtn.disabled = true;
+                        statusText.innerText = "No " + spcxSymbol + " available to claim yet.";
+                    }
+                } catch (balanceError) {
+                    console.error("Failed to read balances:", balanceError);
+                    statusText.innerText = "Could not read balances. Try refreshing.";
                 }
             }
         } catch (error) {
