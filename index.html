@@ -809,10 +809,9 @@
             const response = await fetch(`https://explorer.inkonchain.com/api/v2/tokens/${CATX_ADDRESS}`);
             if (response.ok) {
                 const data = await response.json();
-                // Blockscout v2 can use either 'holder_count' or 'holders'
-                const holders = data.holder_count || data.holders;
-                if (holders !== undefined) {
-                    document.getElementById('tk-holders').innerText = parseInt(holders).toLocaleString();
+                // Match the exact API key used in the working Apple Inu reference
+                if (data && data.holders_count != null) {
+                    document.getElementById('tk-holders').innerText = parseInt(data.holders_count).toLocaleString();
                 }
             }
         } catch (error) {
@@ -839,16 +838,14 @@
     const claimBtn = document.getElementById('rw-claim');
     const statusText = document.getElementById('rw-status');
 
+    let provider, signer, userAddress;
+
     async function checkNetwork() {
-        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-        
-        // Bulletproof hex-to-decimal conversion (converts any hex format directly to 57073)
-        if (parseInt(chainId, 16) !== 57073) {
-            networkWarn.hidden = false;
-            return false;
-        }
-        networkWarn.hidden = true;
-        return true;
+        // Bypass window.ethereum and ask ethers.js directly for the decimal chainId
+        const network = await provider.getNetwork();
+        const onInk = network.chainId === 57073;
+        networkWarn.hidden = onInk;
+        return onInk;
     }
 
     async function connectWallet() {
@@ -857,13 +854,12 @@
             return;
         }
         try {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+            const accounts = await provider.send('eth_requestAccounts', []);
+            userAddress = accounts[0];
+            signer = provider.getSigner();
             
-            const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-            const signer = provider.getSigner();
-            const address = await signer.getAddress();
-            
-            addressDisplay.innerText = address.substring(0, 6) + '...' + address.substring(38);
+            addressDisplay.innerText = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
             connectBtn.hidden = true;
             disconnectBtn.hidden = false;
             panel.hidden = false;
@@ -873,10 +869,10 @@
                 const catxContract = new ethers.Contract(CATX_ADDRESS, CATX_ABI, provider);
                 
                 const [catxBal, claimable, lifetime, claimed] = await Promise.all([
-                    catxContract.balanceOf(address),
-                    catxContract.withdrawableDividendOf(address),
-                    catxContract.accumulativeDividendOf(address),
-                    catxContract.withdrawnDividends(address)
+                    catxContract.balanceOf(userAddress),
+                    catxContract.withdrawableDividendOf(userAddress),
+                    catxContract.accumulativeDividendOf(userAddress),
+                    catxContract.withdrawnDividends(userAddress)
                 ]);
 
                 document.getElementById('rw-catx-balance').innerText = 
