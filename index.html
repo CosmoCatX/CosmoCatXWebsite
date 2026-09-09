@@ -742,7 +742,7 @@
                 </div>
 
                 <!-- Rewards stats panel -->
-                <div id="rw-panel">
+                <div id="rw-panel" hidden>
                     <div class="rw-stats">
                         <div class="rw-stat">
                             <div class="label">Your $CATX balance</div>
@@ -793,6 +793,137 @@
         <p>$CATX is a meme coin with no intrinsic value or expectation of financial return. There is no formal team or roadmap. The coin is completely useless and for entertainment purposes only.</p>
         <p style="margin-top: 20px;">&copy; 2026 $CATX Token. All rights reserved.</p>
     </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+
+    <script>
+    const INK_CHAIN_ID = '0xdef1'; // 57073 in hex
+    const CATX_ADDRESS = '0x06A0Ff27F4f2363259FC4c96DdE427E06048EdD3'; 
+    
+    // Updated ABI using your exact Sentry contract functions
+    const CATX_ABI = [
+        "function balanceOf(address owner) view returns (uint256)",
+        "function withdrawableDividendOf(address owner) view returns (uint256)",
+        "function accumulativeDividendOf(address owner) view returns (uint256)",
+        "function withdrawnDividends(address owner) view returns (uint256)",
+        "function claim() external"
+    ];
+
+    const connectBtn = document.getElementById('rw-connect');
+    const addressDisplay = document.getElementById('rw-address');
+    const nowalletMsg = document.getElementById('rw-nowallet');
+    const networkWarn = document.getElementById('rw-network-warn');
+    const switchBtn = document.getElementById('rw-switch');
+    const panel = document.getElementById('rw-panel');
+    const claimBtn = document.getElementById('rw-claim');
+    const statusText = document.getElementById('rw-status');
+
+    async function checkNetwork(provider) {
+        const { chainId } = await provider.getNetwork();
+        if (chainId !== 57073) {
+            networkWarn.hidden = false;
+            return false;
+        }
+        networkWarn.hidden = true;
+        return true;
+    }
+
+    async function connectWallet() {
+        if (!window.ethereum) {
+            nowalletMsg.hidden = false;
+            return;
+        }
+        try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const address = await signer.getAddress();
+            
+            // Update UI
+            addressDisplay.innerText = address.substring(0, 6) + '...' + address.substring(38);
+            connectBtn.innerText = 'Connected';
+            panel.hidden = false;
+
+            const isInk = await checkNetwork(provider);
+            if (isInk) {
+                // Connect to the CATX contract directly
+                const catxContract = new ethers.Contract(CATX_ADDRESS, CATX_ABI, provider);
+                
+                // Fetch all 4 stats simultaneously
+                const [catxBal, claimable, lifetime, claimed] = await Promise.all([
+                    catxContract.balanceOf(address),
+                    catxContract.withdrawableDividendOf(address),
+                    catxContract.accumulativeDividendOf(address),
+                    catxContract.withdrawnDividends(address)
+                ]);
+
+                // Populate the UI
+                document.getElementById('rw-catx-balance').innerText = 
+                    parseFloat(ethers.utils.formatUnits(catxBal, 18)).toLocaleString(undefined, {maximumFractionDigits: 2}) + ' $CATX';
+                
+                document.getElementById('rw-claimable').innerText = 
+                    parseFloat(ethers.utils.formatUnits(claimable, 18)).toLocaleString(undefined, {maximumFractionDigits: 4});
+                    
+                document.getElementById('rw-lifetime').innerText = 
+                    parseFloat(ethers.utils.formatUnits(lifetime, 18)).toLocaleString(undefined, {maximumFractionDigits: 4}) + ' SPCX';
+                    
+                document.getElementById('rw-claimed').innerText = 
+                    parseFloat(ethers.utils.formatUnits(claimed, 18)).toLocaleString(undefined, {maximumFractionDigits: 4}) + ' SPCX';
+
+                // Handle Claim Button Logic
+                if (claimable.gt(0)) {
+                    claimBtn.disabled = false;
+                    claimBtn.onclick = async () => {
+                        try {
+                            claimBtn.disabled = true;
+                            statusText.innerText = "Confirming transaction in wallet...";
+                            const signerContract = catxContract.connect(signer);
+                            const tx = await signerContract.claim();
+                            
+                            statusText.innerText = "Transaction submitted. Waiting for confirmation...";
+                            await tx.wait();
+                            
+                            statusText.innerText = "Claim successful! Refreshing balances...";
+                            setTimeout(connectWallet, 2500); // Reload balances automatically
+                        } catch (error) {
+                            console.error("Claim failed:", error);
+                            statusText.innerText = "Claim cancelled or failed.";
+                            claimBtn.disabled = false;
+                        }
+                    };
+                } else {
+                    claimBtn.disabled = true;
+                    statusText.innerText = "No $SPCX available to claim yet.";
+                }
+            }
+        } catch (error) {
+            console.error("Wallet connection failed:", error);
+        }
+    }
+
+    async function switchNetwork() {
+        try {
+            await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: INK_CHAIN_ID }] });
+            connectWallet();
+        } catch (error) {
+            if (error.code === 4902) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [{
+                        chainId: INK_CHAIN_ID,
+                        chainName: 'Ink',
+                        rpcUrls: ['https://rpc-gel.inkonchain.com'],
+                        nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                        blockExplorerUrls: ['https://explorer.inkonchain.com']
+                    }]
+                });
+            }
+        }
+    }
+
+    connectBtn.addEventListener('click', connectWallet);
+    switchBtn.addEventListener('click', switchNetwork);
+</script>
 
 </body>
 </html>
