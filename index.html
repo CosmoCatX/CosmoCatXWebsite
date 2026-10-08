@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>$CATX | The First Feline on Mars</title>
+    <meta name="description" content="Welcome to Cosmo Cat ($CATX) - the first feline-themed cryptocurrency which rewards holders in SpaceX stocks ($SPCX)!">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+
+    <!-- Link previews (X, Telegram, Discord, etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cosmocatx.io/">
+    <meta property="og:title" content="$CATX | The First Feline on Mars">
+    <meta property="og:description" content="Welcome to Cosmo Cat ($CATX) - the first feline-themed cryptocurrency which rewards holders in SpaceX stocks ($SPCX)!">
+    <meta property="og:image" content="https://cosmocatx.io/CATX%20LOGO%202a.webp">
+    <meta property="og:image:width" content="2048">
+    <meta property="og:image:height" content="2048">
+    <meta property="og:image:alt" content="Cosmo Cat ($CATX) logo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@TheCosmoCatX">
+    <meta name="twitter:title" content="$CATX | The First Feline on Mars">
+    <meta name="twitter:description" content="Welcome to Cosmo Cat ($CATX) - the first feline-themed cryptocurrency which rewards holders in SpaceX stocks ($SPCX)!">
+    <meta name="twitter:image" content="https://cosmocatx.io/CATX%20LOGO%202a.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
@@ -238,8 +255,55 @@
             background: #05050a;
             border-top: 1px solid rgba(0, 243, 255, 0.2);
             font-size: 0.9rem;
-            color: #666;
+            color: #8a8f98;
         }
+
+        /* Button rows (wrap neatly on small screens) */
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .disclaimer {
+            font-size: 0.8rem;
+            color: #8a8f98;
+        }
+
+        /* Mobile menu button (☰) — hidden on desktop */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            background: transparent;
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--neon-cyan);
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        nav.open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        nav.open .nav-toggle span:nth-child(2) { opacity: 0; }
+        nav.open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -249,9 +313,36 @@
             }
             .text-content h1 { font-size: 3rem; }
             .text-content h2 { font-size: 2rem; }
-            .nav-links { display: none; } /* Simplified mobile nav for now */
-            nav { justify-content: center; }
             .reverse { direction: ltr; }
+            .btn-row { justify-content: center; }
+
+            nav { padding: 14px 16px; }
+            .brand { font-size: 1.5rem; }
+            .nav-right .btn { padding: 10px 18px; font-size: 0.8rem; }
+            .nav-toggle { display: flex; }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 0;
+                background: #05050a;
+                border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+                padding: 8px 16px 16px;
+            }
+
+            nav.open .nav-links { display: flex; }
+
+            .nav-links a {
+                padding: 14px 4px;
+                font-size: 1.05rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            }
+
+            .nav-links a:last-child { border-bottom: none; }
         }
 
         /* Tokenomics Dashboard UI */
@@ -630,6 +721,29 @@
             margin: 0 auto;
         }
 
+        /* Intro text + illustration side by side */
+        .sx-head {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            text-align: left;
+        }
+
+        .sx-head .sx-logo { margin: 0 0 20px; }
+        .sx-head p { margin: 0; }
+
+        .sx-hero-img img {
+            width: 100%;
+            max-width: 440px;
+            height: auto;
+            display: block;
+            margin-left: auto;
+            border-radius: 20px;
+            border: 1px solid rgba(74, 222, 128, 0.25);
+            box-shadow: 0 0 40px rgba(74, 222, 128, 0.12);
+        }
+
         .sx-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -770,6 +884,10 @@
 
         @media (max-width: 768px) {
             .sx-grid { grid-template-columns: 1fr; }
+            .sx-head { grid-template-columns: 1fr; gap: 35px; text-align: center; }
+            .sx-head .sx-logo { margin: 0 auto 20px; }
+            .sx-head p { margin: 0 auto; }
+            .sx-hero-img img { margin: 0 auto; max-width: 340px; }
             .sx-head h2 { font-size: 2.2rem; }
             .sx-big { font-size: 2.4rem; }
             .sx-flow { flex-direction: column; gap: 8px; }
@@ -783,7 +901,7 @@
 
     <nav>
         <a href="#" class="brand">$CATX</a>
-        <div class="nav-links">
+        <div class="nav-links" id="nav-links">
             <a href="#about">Mission</a>
             <a href="#tokenomics">Tokenomics</a>
             <a href="#buy">How to Buy</a>
@@ -791,7 +909,12 @@
             <a href="#splicex">SpliceX</a>
             <a href="#community">Socials</a>
         </div>
-        <a href="#buy" class="btn btn-cyan">Buy Now</a>
+        <div class="nav-right">
+            <a href="#buy" class="btn btn-cyan">Buy Now</a>
+            <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
     </nav>
 
     <!-- Hero Section -->
@@ -799,10 +922,12 @@
         <div class="container">
             <div class="text-content">
                 <h1>Board the Starship</h1>
-                <p>Welcome to Cosmo Cat ($CATX) - the first feline-themed cryptocurrency which rewards holders in SpaceX stocks ($SPCX)! 
+                <p>Welcome to Cosmo Cat ($CATX) - the first feline-themed cryptocurrency which rewards holders in SpaceX stocks ($SPCX)!</p>
                 <p>Forget the moon - we’re going interplanetary! Join the fearless Cosmo Cat on an epic mission beyond the stars.</p>
-                <a href="#about" class="btn">Explore the Mission</a>
-                <a href="#buy" class="btn btn-cyan" style="margin-left: 15px;">Ape In</a>
+                <div class="btn-row">
+                    <a href="#about" class="btn">Explore the Mission</a>
+                    <a href="#buy" class="btn btn-cyan">Ape In</a>
+                </div>
             </div>
             <div class="image-content">
                 <img src="image1.png" alt="Cat riding a rocket" class="float">
@@ -815,9 +940,9 @@
         <div class="container reverse">
             <div class="text-content">
                 <h2>SpaceX Approved*</h2>
-                <p>Cosmo Cat ($CATX) is the first Sentry token which rewards holders with Spacex SPCX stock rewards. Earn while you sleep with timeless reflections, zero-gravity fees, and 100% pure rocket fuel. 
+                <p>Cosmo Cat ($CATX) is the first Sentry token which rewards holders with Spacex SPCX stock rewards. Earn while you sleep with timeless reflections, zero-gravity fees, and 100% pure rocket fuel.</p>
                 <p>🚀🐱 Hold $CATX, earn $SPCX, and fuel the mission to Mars.</p>
-                <p style="font-size: 0.8rem; color: #555;">*Not actually approved by SpaceX, but we manifest it.</p>
+                <p class="disclaimer">*Not actually approved by SpaceX, but we manifest it.</p>
             </div>
             <div class="image-content">
                 <img src="image2.png" alt="Cat outside SpaceX HQ" class="float-delayed">
@@ -969,6 +1094,7 @@
     <section id="splicex">
         <div class="sx-wrap">
             <div class="sx-head">
+                <div class="sx-intro">
                 <div class="sx-logo">
                     <svg viewBox="0 0 1932 1932" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SpliceX logo">
                         <defs>
@@ -1000,6 +1126,10 @@
                 <span class="rw-eyebrow" style="color: var(--neon-cyan);">Partner Protocol</span>
                 <h2>SpliceX</h2>
                 <p>Big holders splice for free. Everyone else fuels the burn. SpliceX turns protocol activity into constant buy pressure on $CATX.</p>
+                </div>
+                <div class="sx-hero-img">
+                    <img src="catxsplicex.png" alt="Cosmo Cat on Mars holding the SpliceX logo" class="float-delayed" width="2048" height="2048" loading="lazy">
+                </div>
             </div>
 
             <div class="sx-grid">
@@ -1031,7 +1161,7 @@
 
             <div class="sx-cta">
                 <a href="https://www.splicex.io/" target="_blank" rel="noopener" class="btn">Launch SpliceX</a>
-                <a href="#buy" class="btn btn-cyan">Get 1M $CATX</a>
+                <a href="https://www.splicex.io/#/buy/CATX" target="_blank" rel="noopener" class="btn btn-cyan">Get 1M $CATX</a>
             </div>
         </div>
     </section>
@@ -1046,22 +1176,39 @@
             <img src="image6.png" alt="Cat thumbs up on the moon">
         </div>
 
-        <div style="margin-top: 50px;">
+        <div class="btn-row" style="margin-top: 50px; justify-content: center;">
             <a href="https://x.com/TheCosmoCatX" target="_blank" rel="noopener noreferrer" class="btn">Twitter / X</a>
-            <a href="https://t.me/CosmoCatX" target="_blank" rel="noopener noreferrer" class="btn btn-cyan" style="margin-left: 15px;">Telegram</a>
+            <a href="https://t.me/CosmoCatX" target="_blank" rel="noopener noreferrer" class="btn btn-cyan">Telegram</a>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
         <h2 style="color: var(--neon-cyan); margin-bottom: 10px;">$CATX</h2>
-        <p>$CATX is a meme coin with no intrinsic value or expectation of financial return. There is no formal team or roadmap. The coin is completely useless and for entertainment purposes only.</p>
-        <p style="margin-top: 20px;">&copy; 2026 $CATX Token. All rights reserved.</p>
+        <p>&copy; 2026 $CATX Token. All rights reserved.</p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 
     <script>
+    // Mobile menu (☰): open/close, and close after tapping a link or pressing Esc
+    (function () {
+        const nav = document.querySelector('nav');
+        const toggle = document.getElementById('nav-toggle');
+        const links = document.getElementById('nav-links');
+
+        function setMenu(open) {
+            nav.classList.toggle('open', open);
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        }
+
+        toggle.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+        links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+        document.addEventListener('click', (e) => { if (!nav.contains(e.target)) setMenu(false); });
+    })();
+
     const INK_CHAIN_ID = '0xdef1'; // 57073 in hex
     const CATX_ADDRESS = '0x06A0Ff27F4f2363259FC4c96DdE427E06048EdD3'; 
 
