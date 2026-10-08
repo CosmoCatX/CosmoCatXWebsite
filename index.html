@@ -586,6 +586,195 @@
             background: var(--neon-cyan);
             color: var(--bg-dark);
         }
+
+        /* SpliceX Section */
+        #splicex {
+            flex-direction: column;
+            text-align: center;
+            min-height: auto;
+            padding: 100px 5vw;
+        }
+
+        .sx-wrap {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .sx-logo {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px;
+            filter: drop-shadow(0 0 24px rgba(74, 222, 128, 0.25));
+        }
+
+        .sx-logo svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .sx-head h2 {
+            font-size: 3rem;
+            margin: 10px 0 15px;
+            background: linear-gradient(90deg, #4ade80, #facc15);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sx-head p {
+            color: #a0a5aa;
+            font-size: 1.15rem;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .sx-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 45px;
+            text-align: left;
+        }
+
+        .sx-card {
+            background: #121318;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sx-card-green { border-top: 3px solid #4ade80; }
+        .sx-card-amber { border-top: 3px solid #facc15; }
+
+        .sx-tag {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #7a7e85;
+            font-weight: 700;
+        }
+
+        .sx-big {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 10px 0 8px;
+        }
+
+        .sx-card-green .sx-big {
+            color: #4ade80;
+            text-shadow: 0 0 18px rgba(74, 222, 128, 0.4);
+        }
+
+        .sx-card-amber .sx-big {
+            color: #facc15;
+            text-shadow: 0 0 18px rgba(250, 204, 21, 0.35);
+        }
+
+        .sx-card h3 {
+            font-size: 1rem;
+            color: #ffffff;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .sx-card p {
+            color: #a0a5aa;
+            font-size: 0.98rem;
+        }
+
+        .sx-elig {
+            margin-top: auto;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: #a0a5aa;
+        }
+
+        .sx-card-green p { margin-bottom: 20px; }
+
+        .sx-elig.ok {
+            background: rgba(74, 222, 128, 0.08);
+            border-color: rgba(74, 222, 128, 0.35);
+            color: #4ade80;
+        }
+
+        .sx-elig.short {
+            background: rgba(250, 204, 21, 0.06);
+            border-color: rgba(250, 204, 21, 0.3);
+            color: #facc15;
+        }
+
+        .sx-check {
+            background: transparent;
+            color: #4ade80;
+            border: 1px solid #4ade80;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sx-check:hover {
+            background: #4ade80;
+            color: var(--bg-dark);
+        }
+
+        .sx-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .sx-step {
+            background: #121318;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+
+        .sx-step strong { color: #facc15; }
+
+        .sx-arrow {
+            color: #4b5563;
+            font-size: 1.2rem;
+        }
+
+        .sx-cta {
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .sx-grid { grid-template-columns: 1fr; }
+            .sx-head h2 { font-size: 2.2rem; }
+            .sx-big { font-size: 2.4rem; }
+            .sx-flow { flex-direction: column; gap: 8px; }
+            .sx-arrow { transform: rotate(90deg); }
+        }
     </style>
 </head>
 <body>
@@ -599,6 +788,7 @@
             <a href="#tokenomics">Tokenomics</a>
             <a href="#buy">How to Buy</a>
             <a href="#rewards">Rewards</a>
+            <a href="#splicex">SpliceX</a>
             <a href="#community">Socials</a>
         </div>
         <a href="#buy" class="btn btn-cyan">Buy Now</a>
@@ -775,6 +965,77 @@
         </div>
     </section>
 
+    <!-- SpliceX Section -->
+    <section id="splicex">
+        <div class="sx-wrap">
+            <div class="sx-head">
+                <div class="sx-logo">
+                    <svg viewBox="0 0 1932 1932" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SpliceX logo">
+                        <defs>
+                            <filter id="sxGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="22" result="blur"/>
+                                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                        </defs>
+                        <rect x="30" y="30" width="1872" height="1872" rx="370" fill="#0c0f0c" stroke="#2e9e44" stroke-width="60"/>
+                        <g filter="url(#sxGlow)" fill="#49e55f">
+                            <rect x="343" y="343" width="158" height="158"/>
+                            <rect x="524" y="524" width="158" height="158"/>
+                            <rect x="705" y="705" width="158" height="158"/>
+                            <rect x="1068" y="1068" width="158" height="158"/>
+                            <rect x="1249" y="1249" width="158" height="158"/>
+                            <rect x="1430" y="1430" width="158" height="158"/>
+                        </g>
+                        <g filter="url(#sxGlow)" fill="#f2c14e">
+                            <rect x="1430" y="343" width="158" height="158"/>
+                            <rect x="1249" y="524" width="158" height="158"/>
+                            <rect x="1068" y="705" width="158" height="158"/>
+                            <rect x="887" y="887" width="158" height="158"/>
+                            <rect x="705" y="1068" width="158" height="158"/>
+                            <rect x="524" y="1249" width="158" height="158"/>
+                            <rect x="343" y="1430" width="158" height="158"/>
+                        </g>
+                    </svg>
+                </div>
+                <span class="rw-eyebrow" style="color: var(--neon-cyan);">Partner Protocol</span>
+                <h2>SpliceX</h2>
+                <p>Big holders splice for free. Everyone else fuels the burn. SpliceX turns protocol activity into constant buy pressure on $CATX.</p>
+            </div>
+
+            <div class="sx-grid">
+                <div class="sx-card sx-card-green">
+                    <div class="sx-tag">Holder perk</div>
+                    <div class="sx-big">FREE</div>
+                    <h3>Splices for 1M+ holders</h3>
+                    <p>Hold 1,000,000 or more $CATX and your splices on the SpliceX protocol are free.</p>
+                    <div class="sx-elig" id="sx-elig">
+                        <span id="sx-elig-text">Are you eligible?</span>
+                        <button class="sx-check" id="sx-check" type="button">Check wallet</button>
+                    </div>
+                </div>
+                <div class="sx-card sx-card-amber">
+                    <div class="sx-tag">Buy &amp; burn</div>
+                    <div class="sx-big">50%</div>
+                    <h3>Of every SpliceX fee</h3>
+                    <p>Half of all SpliceX transaction fees is used to buy $CATX, which is then burned forever. More splicing, less supply.</p>
+                </div>
+            </div>
+
+            <div class="sx-flow" aria-label="How the SpliceX burn works">
+                <div class="sx-step">SpliceX fee</div>
+                <div class="sx-arrow">→</div>
+                <div class="sx-step"><strong>50%</strong> buys $CATX</div>
+                <div class="sx-arrow">→</div>
+                <div class="sx-step">Burned forever 🔥</div>
+            </div>
+
+            <div class="sx-cta">
+                <a href="https://www.splicex.io/" target="_blank" rel="noopener" class="btn">Launch SpliceX</a>
+                <a href="#buy" class="btn btn-cyan">Get 1M $CATX</a>
+            </div>
+        </div>
+    </section>
+
     <!-- Community Section -->
     <section id="community" class="community">
         <h2>Join the $CATX Fleet</h2>
@@ -866,6 +1127,32 @@
         }
     }
 
+    // SpliceX eligibility (1M+ $CATX = free splices)
+    const SPLICE_MIN = '1000000';
+    const sxElig = document.getElementById('sx-elig');
+    const sxEligText = document.getElementById('sx-elig-text');
+    const sxCheckBtn = document.getElementById('sx-check');
+
+    function setSpliceStatus(text, state) {
+        sxEligText.innerText = text;
+        sxElig.classList.remove('ok', 'short');
+        if (state) sxElig.classList.add(state);
+        sxCheckBtn.hidden = state === 'ok' || state === 'short';
+    }
+
+    function updateSpliceEligibility(bal, decimals) {
+        try {
+            const threshold = ethers.utils.parseUnits(SPLICE_MIN, decimals);
+            if (bal.gte(threshold)) {
+                setSpliceStatus('✓ Eligible — your splices are free', 'ok');
+            } else {
+                setSpliceStatus('Need ' + fmt(threshold.sub(bal), decimals, 0) + ' more $CATX', 'short');
+            }
+        } catch (e) {
+            setSpliceStatus('Could not check eligibility', null);
+        }
+    }
+
     async function connectWallet() {
         if (!window.ethereum) {
             nowalletMsg.hidden = false;
@@ -915,6 +1202,7 @@
                     document.getElementById('rw-claimable').innerText = fmt(claimable, spcxDecimals, 4);
                     document.getElementById('rw-lifetime').innerText = fmt(lifetime, spcxDecimals, 4) + ' ' + spcxSymbol;
                     document.getElementById('rw-claimed').innerText = fmt(claimed, spcxDecimals, 4) + ' ' + spcxSymbol;
+                    updateSpliceEligibility(catxBal, catxDecimals);
 
                     if (claimable.gt(0)) {
                         claimBtn.disabled = false;
@@ -944,6 +1232,8 @@
                     console.error("Failed to read balances:", balanceError);
                     statusText.innerText = "Could not read balances. Try refreshing.";
                 }
+            } else {
+                setSpliceStatus('Switch to Ink to check', null);
             }
         } catch (error) {
             console.error("Wallet connection failed:", error);
@@ -962,6 +1252,7 @@
         document.getElementById('rw-lifetime').innerText = '0.00 SPCX';
         document.getElementById('rw-claimed').innerText = '0.00 SPCX';
         statusText.innerText = '';
+        setSpliceStatus('Are you eligible?', null);
 
         if (window.ethereum && window.ethereum.request) {
             try {
@@ -1009,6 +1300,13 @@
     connectBtn.addEventListener('click', connectWallet);
     disconnectBtn.addEventListener('click', disconnectWallet);
     switchBtn.addEventListener('click', switchNetwork);
+    sxCheckBtn.addEventListener('click', () => {
+        if (!window.ethereum) {
+            setSpliceStatus('No wallet detected', null);
+            return;
+        }
+        connectWallet();
+    });
 </script>
 
 </body>
